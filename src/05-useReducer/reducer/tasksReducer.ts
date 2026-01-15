@@ -1,4 +1,4 @@
-
+import * as z from 'zod';
 interface Todo {
     id: number;
     text: string;
@@ -12,13 +12,29 @@ interface TaskState {
 }
 
 
-export const getTasksInitialState =():TaskState =>{
-    return {
-        todos:[],
-        completed:0,
-        length:0,
-        pending:0
+export const getTasksInitialState = (): TaskState => {
+    const localStorageState = localStorage.getItem('tasks-state');
+    if (!localStorageState) {
+        return {
+            todos: [],
+            completed: 0,
+            length: 0,
+            pending: 0
+        }
     }
+    // validate with zod
+    const result = TaskStateSchema.safeParse(JSON.parse(localStorageState));
+    if(result.error){
+        // console.log(result.error);
+         return {
+            todos: [],
+            completed: 0,
+            length: 0,
+            pending: 0
+        }
+    }
+    return result.data;
+
 }
 
 export type TaskAction =
@@ -34,6 +50,22 @@ export type TaskAction =
             id: number;
         }
     };
+
+const TodoSchema = z.object(
+    {
+        id:z.number(),
+        text:z.string(),
+        completed:z.boolean()
+    }
+)
+const TaskStateSchema = z.object({
+    todos: z.array(TodoSchema),
+    length: z.number(),
+    completed: z.number(),
+    pending: z.number(),    
+})
+
+
 
 export const tasksReducer = (
     state: TaskState,
@@ -62,7 +94,7 @@ export const tasksReducer = (
                 ...state,
                 todos: state.todos.filter(todo => todo.id !== action.payload.id),
                 length: state.todos.length,
-                completed: state.todos.filter(todo => todo.completed).length ,
+                completed: state.todos.filter(todo => todo.completed).length,
                 pending: state.todos.filter(todo => !todo.completed).length,
 
             }
