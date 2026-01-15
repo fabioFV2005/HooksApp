@@ -27,7 +27,15 @@ export const ScrambleWords = () => {
 
     const [state, dispatch] = useReducer(ScrambleWordsReducer, getInitialState())
     const { words, currentWord, errorCounter, guess, isGameOver, maxAllowErrors, maxSkips, points, scrambledWord, skipCounter, totalWords } = state;
-
+    useEffect(() => {
+        if (points > 0) {
+            confetti({
+                particleCount: 100,
+                spread: 120,
+                origin: { y: 0.6 },
+            })
+        }
+    }, [points])
     // const [words, setWords] = useState(shuffleArray(GAME_WORDS));
 
     // const [currentWord, setCurrentWord] = useState(words[0]);
@@ -49,7 +57,7 @@ export const ScrambleWords = () => {
     const handleGuessSubmit = (e: React.FormEvent) => {
         // Previene el refresh de la página
         e.preventDefault();
-        dispatch({type:'CHECK_ANSWER'})
+        dispatch({ type: 'CHECK_ANSWER' })
         // Implementar lógica de juego
         // console.log({words})
         // console.log('Intento de adivinanza:', guess, currentWord);
@@ -73,7 +81,7 @@ export const ScrambleWords = () => {
     };
 
     const handleSkip = () => {
-        dispatch({type:'SKIP_WORD'})
+        dispatch({ type: 'SKIP_WORD' })
         // if(skipCounter >= maxSkips) return;
         // const updatedWords = words.slice(1);
         // setSkipCounter(prev => prev + 1);
@@ -84,7 +92,7 @@ export const ScrambleWords = () => {
     };
 
     const handlePlayAgain = () => {
-        dispatch({type:'START_NEW_GAME', payload:getInitialState()})
+        dispatch({ type: 'START_NEW_GAME', payload: getInitialState() })
         // const newArray = shuffleArray(GAME_WORDS);
         // setErrorCounter(0);
         // setPoints(0);
