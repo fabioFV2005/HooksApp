@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkipForward, Play } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { getInitialState, ScrambleWordsReducer } from './reducer/ScrambleWordReducer';
+import { getInitialState, ScrambleWordsReducer } from './reducer/scrambleWordReducer';
 
 // Esta función mezcla el arreglo para que siempre sea aleatorio
 const shuffleArray = (array: string[]) => {
